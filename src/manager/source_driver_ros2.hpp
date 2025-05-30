@@ -106,8 +106,6 @@ protected:
   hesai_ros_driver::msg::UdpFrame ToRosMsg(const UdpFrame_t& ros_msg, double timestamp);
   // Convert imu, imu into ROS message
   sensor_msgs::msg::Imu ToRosMsg(const LidarImuData& firetime_correction_);
-  // Previous IMU message
-  LidarImuData previous_imu_msg_;
 
   std::string frame_id_;
 
@@ -249,11 +247,7 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 
 inline void SourceDriver::SendImuConfig(const LidarImuData& msg)
 {
-  if (msg != previous_imu_msg_)
-  {
-    imu_pub_.publish(ToRosMsg(msg));
-    previous_imu_msg_ = msg;
-  }
+  imu_pub_.publish(ToRosMsg(msg));
 }
 
 inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id)
